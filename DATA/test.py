@@ -5,7 +5,7 @@ import os
 
 def merge_csv_files(output_file="merged_data.csv"):
     # Specify the path to your files
-    path_to_files = "C:/Users/max_x/ucb/A - macss/2025 Spring/Climate TRACE & CLEE/Data/test-4-smac/data/"
+    path_to_files = ".."
     
     # List all CSV files in the directory
     csv_files = [f for f in os.listdir(path_to_files) if f.startswith('data_') and f.endswith('.csv')]
