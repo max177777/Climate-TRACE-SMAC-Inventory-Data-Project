@@ -3,24 +3,13 @@ import pandas as pd
 import plotly.express as px
 import os
 
-def merge_csv_files(output_file="merged_data.csv"):
-    # Specify the path to your files
-    path_to_files = "../DATA/"
-    
-    # List all CSV files in the directory
-    csv_files = [f for f in os.listdir(path_to_files) if f.startswith('data_') and f.endswith('.csv')]
-    
-    # Sort files to maintain the order, important if the order of data matters
-    csv_files.sort(key=lambda f: int(f.split('_')[1].split('.')[0]))  # This sorts by the number in filenames assuming 'data_X.csv'
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import os
 
-    # Read and concatenate all CSV files
-    df = pd.concat((pd.read_csv(path_to_files + file) for file in csv_files), ignore_index=True)
-    
-    return df
-
-# Use the function to merge files and get the DataFrame
-df = merge_csv_files()
-
+file_path = "smac.csv"
+df = pd.read_csv(file_path)
 
 # Basic Preprocessing
 df['year'] = pd.to_datetime(df['start_time']).dt.year
