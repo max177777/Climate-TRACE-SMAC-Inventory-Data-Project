@@ -1,35 +1,26 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import requests
+import os
 
-def get_latest_release_asset(repo, asset_name):
-    """Fetch the URL of a specific asset from the latest release of the specified repository."""
-    api_url = f"https://api.github.com/repos/{repo}/releases/latest"
-    response = requests.get(api_url)
-    response.raise_for_status()  # This will raise an error for bad responses
-    assets = response.json()['assets']
-    for asset in assets:
-        if asset['name'] == asset_name:
-            return asset['browser_download_url']
-    return None
+def merge_csv_files(output_file="merged_data.csv"):
+    # Specify the path to your files
+    path_to_files = "C:/Users/max_x/ucb/A - macss/2025 Spring/Climate TRACE & CLEE/Data/test-4-smac/data/"
+    
+    # List all CSV files in the directory
+    csv_files = [f for f in os.listdir(path_to_files) if f.startswith('data_') and f.endswith('.csv')]
+    
+    # Sort files to maintain the order, important if the order of data matters
+    csv_files.sort(key=lambda f: int(f.split('_')[1].split('.')[0]))  # This sorts by the number in filenames assuming 'data_X.csv'
 
-def download_file(url, local_filename):
-    """Download a file from a remote URL to a local path."""
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
-    return local_filename
+    # Read and concatenate all CSV files
+    df = pd.concat((pd.read_csv(path_to_files + file) for file in csv_files), ignore_index=True)
+    
+    return df
 
-# Usage
-repo = 'max177777/Climate-TRACE-SMAC-Inventory-Data-Project'  # Your GitHub repo
-asset_name = 'smac.csv'  # Name of the asset in the release
-file_url = get_latest_release_asset(repo, asset_name)
-if file_url:
-    download_file(file_url, 'local_path_to_save/yourdatafile.csv')
+# Use the function to merge files and get the DataFrame
+df = merge_csv_files()
+
 
 # Basic Preprocessing
 df['year'] = pd.to_datetime(df['start_time']).dt.year
