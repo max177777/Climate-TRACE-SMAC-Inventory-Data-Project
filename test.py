@@ -1,11 +1,31 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import requests
 
-# Load Data from Google Drive
-file_id = "13hsx4-c2ry1gpKIIMZUanL9EGwIs_-4M"
-file_path = f"https://drive.google.com/uc?id={file_id}"
-df = pd.read_csv(file_path)
+def get_latest_release_asset(repo, asset_name):
+    """Fetch the URL of a specific asset from the latest release of the specified repository."""
+    api_url = f"https://api.github.com/repos/{repo}/releases/latest"
+    response = requests.get(api_url)
+    response.raise_for_status()  # This will raise an error for bad responses
+    assets = response.json()['assets']
+    for asset in assets:
+        if asset['name'] == asset_name:
+            return asset['browser_download_url']
+    return None
+
+# Configuration
+REPO_NAME = "max177777/SMAC"  # Change this to your repository
+ASSET_NAME = "smac.csv"  # The name of the file in the release
+
+# Load Data from GitHub Release
+try:
+    file_url = get_latest_release_asset(REPO_NAME, ASSET_NAME)
+    if file_url:
+        df = pd.read_csv(file_url)
+    else:
+        st.error("File not found in the latest release.")
+        st.stop()
 
 # Basic Preprocessing
 df['year'] = pd.to_datetime(df['start_time']).dt.year
