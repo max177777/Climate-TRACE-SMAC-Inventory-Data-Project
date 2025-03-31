@@ -1,22 +1,38 @@
-import streamlit as st
-import pandas as pd
-import plotly.express as px
 import os
+import pandas as pd
 
 def merge_csv_files(output_file="merged_data.csv"):
     # Specify the path to your files
-    path_to_files = "."
+    path_to_files = "."  # Adjust this to the directory containing your CSV files
     
     # List all CSV files in the directory
     csv_files = [f for f in os.listdir(path_to_files) if f.startswith('data_') and f.endswith('.csv')]
     
+    # Debugging output
+    print("Found CSV files:", csv_files)
+    
+    if not csv_files:
+        print("No CSV files found. Check the directory and file naming.")
+        return None  # Early exit if no files are found
+    
     # Sort files to maintain the order, important if the order of data matters
     csv_files.sort(key=lambda f: int(f.split('_')[1].split('.')[0]))  # This sorts by the number in filenames assuming 'data_X.csv'
-
+    
     # Read and concatenate all CSV files
-    df = pd.concat((pd.read_csv(path_to_files + file) for file in csv_files), ignore_index=True)
+    df = pd.concat((pd.read_csv(os.path.join(path_to_files, file)) for file in csv_files), ignore_index=True)
+    
+    # Save the merged DataFrame to a CSV file if needed
+    df.to_csv(output_file, index=False)
     
     return df
+
+# Usage example, if running this script locally:
+if __name__ == "__main__":
+    merged_df = merge_csv_files()
+    if merged_df is not None:
+        print(merged_df.head())  # Print the first few rows of the merged DataFrame
+    else:
+        print("Merging failed.")
 
 # Use the function to merge files and get the DataFrame
 df = merge_csv_files()
