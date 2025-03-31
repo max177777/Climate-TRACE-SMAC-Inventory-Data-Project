@@ -14,24 +14,22 @@ def get_latest_release_asset(repo, asset_name):
             return asset['browser_download_url']
     return None
 
-# Configuration
-REPO_NAME = "max177777/Climate-TRACE-SMAC-Inventory-Data-Project"  # Repository name
-ASSET_NAME = "smac.csv"  # The name of the file in the release
+def download_file(url, local_filename):
+    """Download a file from a remote URL to a local path."""
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(local_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+    return local_filename
 
-# Load Data from GitHub Release
-try:
-    file_url = get_latest_release_asset(REPO_NAME, ASSET_NAME)
-    if file_url:
-        df = pd.read_csv(file_url)
-    else:
-        st.error("File not found in the latest release.")
-        st.stop()
-
-    # Proceed with your data processing and visualization
-    st.write("Data loaded successfully:")
-    st.write(df.head())
-except Exception as e:
-    st.error(f"Failed to load data: {e}")
+# Usage
+repo = 'max177777/Climate-TRACE-SMAC-Inventory-Data-Project'  # Your GitHub repo
+asset_name = 'smac.csv'  # Name of the asset in the release
+file_url = get_latest_release_asset(repo, asset_name)
+if file_url:
+    download_file(file_url, 'local_path_to_save/yourdatafile.csv')
 
 # Basic Preprocessing
 df['year'] = pd.to_datetime(df['start_time']).dt.year
