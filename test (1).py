@@ -3,7 +3,7 @@ import pandas as pd
 
 def merge_csv_files(output_file="merged_data.csv"):
     # Specify the path to your files
-    path_to_files = "."  # Adjust this to the directory containing your CSV files
+    path_to_files = "./DATA"  # Adjust this to the directory containing your CSV files
     
     # List all CSV files in the directory
     csv_files = [f for f in os.listdir(path_to_files) if f.startswith('data_') and f.endswith('.csv')]
