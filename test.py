@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly as px
+import plotly.express as px
 import os
 
 def merge_csv_files(output_file="merged_data.csv"):
