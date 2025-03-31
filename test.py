@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Load Data
-file_path = "C:/Users/max_x/ucb/A - macss/2025 Spring/Climate TRACE & CLEE/Data/test-4-smac/smac.csv"
+# Load Data from Google Drive
+file_id = "13hsx4-c2ry1gpKIIMZUanL9EGwIs_-4M"
+file_path = f"https://drive.google.com/uc?id={file_id}"
 df = pd.read_csv(file_path)
 
 # Basic Preprocessing
