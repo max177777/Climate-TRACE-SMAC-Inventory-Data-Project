@@ -15,7 +15,7 @@ def get_latest_release_asset(repo, asset_name):
     return None
 
 # Configuration
-REPO_NAME = "max177777/SMAC"  # Change this to your repository
+REPO_NAME = "max177777/Climate-TRACE-SMAC-Inventory-Data-Project"  # Repository name
 ASSET_NAME = "smac.csv"  # The name of the file in the release
 
 # Load Data from GitHub Release
@@ -26,6 +26,12 @@ try:
     else:
         st.error("File not found in the latest release.")
         st.stop()
+
+    # Proceed with your data processing and visualization
+    st.write("Data loaded successfully:")
+    st.write(df.head())
+except Exception as e:
+    st.error(f"Failed to load data: {e}")
 
 # Basic Preprocessing
 df['year'] = pd.to_datetime(df['start_time']).dt.year
